@@ -1,25 +1,16 @@
-resource "aws_instance" "expense" {
-  #count = length(var.instances)
-  count = 3
-  ami                    = "ami-09c813fb71547fc4f" # This is our devops-practice AMI ID
+resource "aws_instance" "this" {
+  count = 1
+  ami                    =  local.ami_id # This is local.tf file to readablity 
   vpc_security_group_ids = [aws_security_group.allow_tls.id]
-  instance_type          = "t3.micro"
- /*  tags = {
-    Name    = var.instances[count.index]
+  instance_type          = local.instance_type
+  tags = {
+    Name    = local.name
     Purpose = "terraform-practice"
-  } */
-
-
-tags = merge(
-    var.common_tags,
-    {
-        Name = var.instances[count.index]
-    }
-  )
+  }
 }
 
 resource "aws_security_group" "allow_tls" {
-  name        = "allow_tls"
+  name        = "allow_tls_1"
   description = "Allow TLS inbound traffic and all outbound traffic"
 
   ingress {

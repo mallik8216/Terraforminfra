@@ -17,3 +17,7 @@ resource "aws_route53_record" "expense" {
   records = [aws_instance.expense[2].public_ip] #list type
   allow_overwrite = true
 } */
+
+resource "a" "name" {
+  
+}
