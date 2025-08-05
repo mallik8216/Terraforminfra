@@ -7,25 +7,21 @@ resource "aws_instance" "this" {
     Name    = "terraform-demo"
     Purpose = "terraform-practice"
   }
-
-  provisioner "local-exec" {
-    command = "echo The server's IP address is ${self.private_ip}"
-  }
 }
-
-
-
 
 resource "aws_security_group" "allow_tls" {
   name        = "allow_tls_1"
   description = "Allow TLS inbound traffic and all outbound traffic"
 
-  ingress {
-    from_port   = 22
-    to_port     = 22
-    protocol    = "tcp"
-    cidr_blocks = ["0.0.0.0/0"]
+dynamic "ingress" { #Terraform vill give you a keyvord vith the block  name .you  can iterate using ingress.
+  for_each =  var.ingress_ports
+  content {
+        from_port = ingress.value ["from_port"]
+        to_port = ingress.value ["to_port"]
+        protocol = ingress.value["protocol"]
+        cidr_blocks = ingress.value["cidr_blocks"]
   }
+}
 
   egress {
     from_port   = 0

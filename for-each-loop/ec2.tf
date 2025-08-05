@@ -1,20 +1,13 @@
 resource "aws_instance" "this" {
-  count = 1
+  for_each = var.instances #terraform will give us a variable called each.
   ami                    = "ami-09c813fb71547fc4f" # This is our devops-practice AMI ID
   vpc_security_group_ids = [aws_security_group.allow_tls.id]
-  instance_type          = "t3.micro"
+  instance_type          = each.value
   tags = {
-    Name    = "terraform-demo"
+    Name    = each.key
     Purpose = "terraform-practice"
   }
-
-  provisioner "local-exec" {
-    command = "echo The server's IP address is ${self.private_ip}"
-  }
 }
-
-
-
 
 resource "aws_security_group" "allow_tls" {
   name        = "allow_tls_1"
@@ -37,4 +30,8 @@ resource "aws_security_group" "allow_tls" {
   tags = {
     Name = "allow_tls"
   }
+}
+
+output "ec2_info" {
+    value = aws_instance.this 
 }

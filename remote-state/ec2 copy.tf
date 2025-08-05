@@ -7,14 +7,7 @@ resource "aws_instance" "this" {
     Name    = "terraform-demo"
     Purpose = "terraform-practice"
   }
-
-  provisioner "local-exec" {
-    command = "echo The server's IP address is ${self.private_ip}"
-  }
 }
-
-
-
 
 resource "aws_security_group" "allow_tls" {
   name        = "allow_tls_1"
